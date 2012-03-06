@@ -10,8 +10,6 @@ Gem::Specification.new do |s|
   s.summary     = %q{EventMachine UDP Proxy}
   s.description = s.summary
 
-  s.rubyforge_project = "em-udp-proxy"
-
   s.add_dependency "eventmachine"
 
   s.files         = `git ls-files`.split("\n")
