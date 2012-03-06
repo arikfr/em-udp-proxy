@@ -1,5 +1,11 @@
 EventMachine based UDP proxy.
 
+Example usage:
+
+> em-udp-proxy -a 127.0.0.1 -p 5001 -A 192.168.1.1 -P 5001
+
+Starts the proxy binded to 127.0.0.1 with port 5001 and forwards traffic to/from 192.168.1.1 on port 5001.
+
 TODO:
 1. More documentation :-)
 2. Remove Client objects for inactive clients (after certain threshold).
