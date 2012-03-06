@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+require File.expand_path('../lib/udp_proxy.rb', File.dirname(__FILE__))
+require 'optparse'
+
+options = {}
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: em-udp-proxy [options]"
+
+  opts.on('-a', '--address ADDRESS', String, "Address to use") { |value| options[:address] = value }
+	opts.on('-p', '--port PORT', Numeric, "Listening port") { |value| options[:port] = value }
+  opts.on('-A','--remote-address ADDRESS', String, "Remote address to connect to") { |value| options[:remote_address] = value}
+  opts.on('-P','--remote-port PORT', Numeric, "Remote port to connect to") { |value| options[:remote_port] = value}
+
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts opts 
+    exit
+  end
+end.parse!
+
+Kernel.abort "Missing arguments, see --help for details." if options.length < 4
+UDPProxy.start options[:address], options[:port], options[:remote_address], options[:remote_port]

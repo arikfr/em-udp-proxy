@@ -27,4 +27,4 @@ module UDPProxy
   end
 end
 
-UDPProxy.start "127.0.0.1", 50001, "127.0.0.1", 50000
+# UDPProxy.start "127.0.0.1", 50001, "127.0.0.1", 50000
