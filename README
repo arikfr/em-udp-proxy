@@ -1,0 +1,6 @@
+EventMachine based UDP proxy.
+
+TODO:
+1. More documentation :-)
+2. Remove Client objects for inactive clients (after certain threshold).
+3. Add some way to get stats from it. 
