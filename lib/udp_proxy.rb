@@ -10,7 +10,7 @@ module UDPProxy
 
     EM::run do
       Syslog.notice "Starting proxy on: #{ip}:#{port}"
-      EM::open_datagram_socket ip, port, UDPProxy::Server, relay_ip, relay_port
+      EM::open_datagram_socket ip, port, UDPProxy::Server, ip, relay_ip, relay_port
       trap("TERM") { stop }
       trap("INT") { stop }
     end

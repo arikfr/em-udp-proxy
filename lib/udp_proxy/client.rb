@@ -15,7 +15,8 @@ module UDPProxy
   end
 
   class Clients
-    def initialize(server)
+    def initialize(server, address)
+      @address = address
       @clients = {}
       @server = server
     end
@@ -31,7 +32,7 @@ module UDPProxy
 
     def create_client(ip, port)
       Syslog.notice "Creating new client for #{ip}:#{port}"
-      client = EM::open_datagram_socket "127.0.0.1", 0, Client, ip, port, @server
+      client = EM::open_datagram_socket @address, 0, Client, ip, port, @server
     end
   end
 

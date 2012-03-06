@@ -1,8 +1,8 @@
 module UDPProxy
   class Server < EM::Connection
-    def initialize(relay_ip, relay_port)
+    def initialize(address, relay_ip, relay_port)
       @relay_ip, @relay_port = relay_ip, relay_port
-      @clients = Clients.new(self)
+      @clients = Clients.new(self, address)
     end
 
     def receive_data(data)
