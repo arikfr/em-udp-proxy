@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require 'rubygems'
-require 'em-udp-proxy/server'
+require 'em-udp-proxy'
 require 'optparse'
 require 'syslog'
 
@@ -33,7 +33,7 @@ EM.run do
 
   ip, port, remote_ip, remote_port = options[:address], options[:port], options[:remote_address], options[:remote_port]
   Syslog.notice "Starting proxy on: #{ip}:#{port} -> #{remote_ip}:#{remote_port}"
-  server = EM.open_datagram_socket(ip, port, UDPProxy::Server, ip, remote_ip, remote_port)
+  server = UDPProxy.start(ip, port, remote_ip, remote_port)
   server.on :new_client do |client|
     Syslog.notice "Creating new client for #{ip}:#{port}"
   end

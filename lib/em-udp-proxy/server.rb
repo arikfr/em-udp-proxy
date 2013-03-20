@@ -18,5 +18,15 @@ module UDPProxy
       run_callbacks(:receive_data, data, client)
       client.send_datagram(data, relay_ip, relay_port)
     end
+
+
+    def self.start(ip, port, remote_ip, remote_port)
+      @server = EM.open_datagram_socket(ip, port, self, ip, remote_ip, remote_port)
+    end
+
+    def self.stop
+      #?
+    end
+
   end
 end
