@@ -1,20 +1,28 @@
-# TODO: periodically kill all dead connections
-module UDPProxy
-  class Client < EM::Connection
-    attr_accessor :client_ip, :client_port
+require 'eventmachine'
+require 'em-udp-proxy/callbacks'
 
-    def initialize(client_ip, client_port, server)
-      @client_ip, @client_port = client_ip, client_port
+# TODO: periodically kill all dead connections
+module EMUDPProxy
+
+  class Client < EM::Connection
+    include Callbacks
+    attr_accessor :ip, :port
+
+    def initialize(ip, port, server)
+      @ip, @port = ip, port
       @server = server
     end
 
     def receive_data(data)
       port, ip = Socket.unpack_sockaddr_in(get_peername)
-      @server.send_datagram(data, client_ip, client_port)
+      run_callbacks(:receive_data, data, ip, port)
+      @server.send_datagram(data, self.ip, self.port)
     end
   end
 
   class Clients
+    include Callbacks
+
     def initialize(server, address)
       @address = address
       @clients = {}
@@ -31,8 +39,9 @@ module UDPProxy
     end
 
     def create_client(ip, port)
-      Syslog.notice "Creating new client for #{ip}:#{port}"
       client = EM::open_datagram_socket @address, 0, Client, ip, port, @server
+      run_callbacks(:new_client, client)
+      client
     end
   end
 

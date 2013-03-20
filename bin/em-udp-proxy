@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
 require 'rubygems'
-require File.expand_path('../lib/udp_proxy.rb', File.dirname(__FILE__))
+require 'em-udp-proxy'
 require 'optparse'
+require 'syslog'
 
 options = {}
 
@@ -20,4 +21,58 @@ OptionParser.new do |opts|
 end.parse!
 
 Kernel.abort "Missing arguments, see --help for details." if options.length < 4
-UDPProxy.start options[:address], options[:port], options[:remote_address], options[:remote_port]
+
+
+EM.run do
+
+  Syslog.open('UDP-Proxy')
+
+  EM.error_handler do |e|
+    msg = "EXCEPTION: #{e.class}: #{e.message}\n#{e.backtrace.map{|l|  "  #{l}"}.join("\n")}"
+    puts msg
+    Syslog.notice msg
+  end
+
+  ip, port, remote_ip, remote_port = options[:address], options[:port], options[:remote_address], options[:remote_port]
+  Syslog.notice "Starting proxy on: #{ip}:#{port} -> #{remote_ip}:#{remote_port}"
+  server = EMUDPProxy.start(ip, port, remote_ip, remote_port)
+  server.on :new_client do |client|
+    Syslog.notice "Creating new client for #{ip}:#{port}"
+  end
+
+  shutdown = lambda do |sig|
+    Syslog.notice "Shutting down [#{sig}]"
+    server.close_connection_after_writing
+    EM.stop
+  end
+  trap('INT'){ shutdown['INT'] }
+  trap('TERM'){ shutdown['TERM'] }
+
+
+
+=begin
+
+  server.on :new_client do |client|
+    client.on(:receive_data){|data, ip, port| puts "#{ip}:#{port} -> #{client.ip}:#{client.port}: #{data}" }
+  end
+  server.on(:receive_data){|data, client| puts "#{client.ip}:#{client.port} -> #{server.relay_ip}:#{server.relay_port}: #{data}" }
+
+  class UpcaseServer < EM::Connection
+    def receive_data(data)
+      send_data(data.upcase)
+    end
+  end
+
+  EM.open_datagram_socket(options[:remote_address], options[:remote_port], UpcaseServer)
+
+  EM.add_periodic_timer 3 do
+    EM.open_datagram_socket '0.0.0.0', 0 do |c|
+      c.send_datagram 'can you hear me?', options[:address], options[:port]
+    end
+  end
+
+=end
+
+
+
+end#EM.run
