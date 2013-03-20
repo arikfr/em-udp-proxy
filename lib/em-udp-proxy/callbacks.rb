@@ -1,4 +1,4 @@
-module UDPProxy
+module EMUDPProxy
   module Callbacks
 
     def callbacks

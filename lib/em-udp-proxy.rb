@@ -1,7 +1,7 @@
 require 'em-udp-proxy/server'
 require 'forwardable'
 
-module UDPProxy
+module EMUDPProxy
 
   class << self
     extend Forwardable

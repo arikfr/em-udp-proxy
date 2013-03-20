@@ -2,7 +2,7 @@ require 'eventmachine'
 require 'em-udp-proxy/callbacks'
 
 # TODO: periodically kill all dead connections
-module UDPProxy
+module EMUDPProxy
 
   class Client < EM::Connection
     include Callbacks

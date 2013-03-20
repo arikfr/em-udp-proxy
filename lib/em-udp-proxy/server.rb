@@ -1,6 +1,6 @@
 require 'em-udp-proxy/client'
 
-module UDPProxy
+module EMUDPProxy
   class Server < EM::Connection
     include Callbacks
     attr_reader :relay_ip, :relay_port
