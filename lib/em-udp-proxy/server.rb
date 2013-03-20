@@ -1,4 +1,4 @@
-require File.expand_path('client.rb', File.dirname(__FILE__))
+require 'em-udp-proxy/client'
 
 module UDPProxy
   class Server < EM::Connection

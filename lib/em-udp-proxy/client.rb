@@ -1,5 +1,5 @@
 require 'eventmachine'
-require File.expand_path('callbacks', File.dirname(__FILE__))
+require 'em-udp-proxy/callbacks'
 
 # TODO: periodically kill all dead connections
 module UDPProxy

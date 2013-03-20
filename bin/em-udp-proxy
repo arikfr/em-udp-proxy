@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require 'rubygems'
-require File.expand_path('../lib/udp_proxy/server.rb', File.dirname(__FILE__))
+require 'em-udp-proxy/server'
 require 'optparse'
 require 'syslog'
 
@@ -48,7 +48,7 @@ EM.run do
 
 
 
-#=begin
+=begin
 
   server.on :new_client do |client|
     client.on(:receive_data){|data, ip, port| puts "#{ip}:#{port} -> #{client.ip}:#{client.port}: #{data}" }
@@ -69,7 +69,7 @@ EM.run do
     end
   end
 
-#=end
+=end
 
 
 
