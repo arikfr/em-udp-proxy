@@ -28,7 +28,9 @@ EM.run do
   Syslog.open('UDP-Proxy')
 
   EM.error_handler do |e|
-    puts "EXCEPTION: #{e.class}: #{e.message}\n#{e.backtrace.map{|l|  "  #{l}"}.join("\n")}"
+    msg = "EXCEPTION: #{e.class}: #{e.message}\n#{e.backtrace.map{|l|  "  #{l}"}.join("\n")}"
+    puts msg
+    Syslog.notice msg
   end
 
   ip, port, remote_ip, remote_port = options[:address], options[:port], options[:remote_address], options[:remote_port]
